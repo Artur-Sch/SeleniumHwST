@@ -40,8 +40,6 @@ public class MyFirstTest {
      */
     @Test
     public void test() {
-        System.setProperty("webdriver.chrome.driver", "driver/chromedriver");
-        driver = new ChromeDriver();
         driver.get("http://localhost/litecart/admin/");
 
         fillInputByName("username", "username");
