@@ -6,21 +6,21 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
 
 public class MyFirstTest {
     private static WebDriver driver;
+    private static WebDriverWait wait;
 
     @BeforeEach
     void startDriver() {
         System.setProperty("webdriver.chrome.driver", "driver/chromedriver");
         driver = new ChromeDriver();
+        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 //        driver = new SafariDriver();
 //        System.setProperty("webdriver.gecko.driver", "driver/geckodriver");
 //        FirefoxOptions options = new FirefoxOptions();
@@ -48,15 +48,7 @@ public class MyFirstTest {
      */
     @Test
     public void test3() {
-        driver.get("http://localhost/litecart/admin/");
-
-        fillInputByName("username", "username");
-        fillInputByName("password", "password");
-
-        getClickDriverOnXpath("//button[@name='login']");
-
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(7));
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@name='login']")));
+        getAutorized();
     }
 
     /**
@@ -64,18 +56,37 @@ public class MyFirstTest {
      */
     @Test
     public void test6() {
+        getAutorized();
+
+//        //span[@class='name']
+//        //li[@id='app-']
+    }
+
+    private void getClickDriverOnXpath(String s) {
+        driver.findElement(By.xpath(s)).click();
+    }
+
+    public WebElement waitForVisibilityElement(WebElement element) {
+        return wait.until(ExpectedConditions.visibilityOf(element));
+    }
+
+    public List<WebElement> getElementsByXpath(String xpath) {
+        return driver.findElements(By.xpath(xpath));
+    }
+
+    public WebElement getElementByXpath(String xpath) {
+        return driver.findElement(By.xpath(xpath));
+    }
+
+
+    public void getAutorized() {
         driver.get("http://localhost/litecart/admin/");
 
         fillInputByName("username", "admin");
         fillInputByName("password", "admin");
 
         getClickDriverOnXpath("//button[@name='login']");
-
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-    }
-
-    private void getClickDriverOnXpath(String s) {
-        driver.findElement(By.xpath(s)).click();
+        waitForVisibilityElement(getElementByXpath("//*[@title='Logout']"));
     }
 
     public void fillInputByName(String name, String textTo) {
