@@ -12,7 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 import java.util.List;
 
-public class MyFirstTest {
+public class SeleniumTests {
     private static WebDriver driver;
     private static WebDriverWait wait;
 
@@ -20,7 +20,7 @@ public class MyFirstTest {
     void startDriver() {
         System.setProperty("webdriver.chrome.driver", "driver/chromedriver");
         driver = new ChromeDriver();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(4));
         wait = new WebDriverWait(driver, Duration.ofSeconds(5));
 //        driver = new SafariDriver();
 //        System.setProperty("webdriver.gecko.driver", "driver/geckodriver");
@@ -71,6 +71,24 @@ public class MyFirstTest {
         }
     }
 
+    /**
+     * Задание 7. Сделайте сценарий, проверяющий наличие стикеров у товаров
+     */
+    @Test
+    public void test7() {
+        driver.navigate().to("http://localhost/litecart");
+        WebElement mainPage = getElementBy(By.cssSelector("#main > div.middle > div.content"));
+
+        List<WebElement> listDucks = getElementsByCss(mainPage, "[class ^= product]");
+        int countAllStikers = getElementsByCss(mainPage, "[class ^= sticker]").size();
+        Assertions.assertEquals(countAllStikers, listDucks.size());
+
+        for (WebElement duck : listDucks) {
+            int countSticker = getElementsByCss(duck, "[class ^= sticker]").size();
+            Assertions.assertEquals(countSticker, 1);
+        }
+    }
+
     public WebElement waitForVisibilityElement(WebElement element) {
         return wait.until(ExpectedConditions.visibilityOf(element));
     }
@@ -83,6 +101,10 @@ public class MyFirstTest {
         return driver.findElement(by);
     }
 
+    public List<WebElement> getElementsByCss(WebElement element, String cssSelector) {
+        return element.findElements(By.cssSelector(cssSelector));
+    }
+
     public void getAutorized() {
         driver.get("http://localhost/litecart/admin/");
 
@@ -90,7 +112,7 @@ public class MyFirstTest {
         fillInputByName("password", "admin");
 
         driver.findElement(By.name("login")).click();
-        waitForVisibilityElement(getElementBy(By.xpath("//*[@title='Logout']")));
+        waitForVisibilityElement(getElementBy(By.cssSelector("[title = Logout]")));
     }
 
     public void fillInputByName(String name, String textTo) {
