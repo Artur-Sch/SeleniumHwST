@@ -3,6 +3,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -20,7 +21,8 @@ public class MyFirstTest {
     void startDriver() {
         System.setProperty("webdriver.chrome.driver", "driver/chromedriver");
         driver = new ChromeDriver();
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(5));
 //        driver = new SafariDriver();
 //        System.setProperty("webdriver.gecko.driver", "driver/geckodriver");
 //        FirefoxOptions options = new FirefoxOptions();
@@ -57,27 +59,30 @@ public class MyFirstTest {
     @Test
     public void test6() {
         getAutorized();
+        List<WebElement> menus = getElementsBy(By.xpath("//li[@id='app-']"));
+        for (int i = 1; i <= menus.size(); i++) {
+            waitForVisibilityElement(getElementBy(By.cssSelector(String.format("ul#box-apps-menu > li#app-:nth-child(%d)", i)))).click();
+            WebElement selectedElement = getElementBy(By.cssSelector("#box-apps-menu #app-.selected"));
+            List<WebElement> menuElements = selectedElement.findElements(By.tagName("li"));
+            for (int j = 2; j <= menuElements.size(); j++) {
+                selectedElement = getElementBy(By.cssSelector("#box-apps-menu #app-.selected"));
+                selectedElement.findElement(By.cssSelector(String.format("li:nth-child(%d)", j))).click();
 
-//        //span[@class='name']
-//        //li[@id='app-']
-    }
-
-    private void getClickDriverOnXpath(String s) {
-        driver.findElement(By.xpath(s)).click();
+            }
+        }
     }
 
     public WebElement waitForVisibilityElement(WebElement element) {
         return wait.until(ExpectedConditions.visibilityOf(element));
     }
 
-    public List<WebElement> getElementsByXpath(String xpath) {
-        return driver.findElements(By.xpath(xpath));
+    public List<WebElement> getElementsBy(By by) {
+        return driver.findElements(by);
     }
 
-    public WebElement getElementByXpath(String xpath) {
-        return driver.findElement(By.xpath(xpath));
+    public WebElement getElementBy(By by) {
+        return driver.findElement(by);
     }
-
 
     public void getAutorized() {
         driver.get("http://localhost/litecart/admin/");
@@ -85,13 +90,12 @@ public class MyFirstTest {
         fillInputByName("username", "admin");
         fillInputByName("password", "admin");
 
-        getClickDriverOnXpath("//button[@name='login']");
-        waitForVisibilityElement(getElementByXpath("//*[@title='Logout']"));
+        driver.findElement(By.name("login")).click();
+        waitForVisibilityElement(getElementBy(By.xpath("//*[@title='Logout']")));
     }
 
     public void fillInputByName(String name, String textTo) {
-        String fullXpath = String.format((".//*[@name='%s']"), name);
-        WebElement element = driver.findElement(By.xpath(fullXpath));
+        WebElement element = waitForVisibilityElement(driver.findElement(By.name(name)));
         element.sendKeys(textTo);
         String actualText = element.getAttribute("value");
         Assertions.assertEquals(actualText, textTo);
