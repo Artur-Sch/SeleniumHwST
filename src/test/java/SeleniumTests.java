@@ -91,12 +91,12 @@ public class SeleniumTests {
         driver.navigate().to("http://localhost/litecart");
         WebElement mainPage = getElementBy(By.cssSelector("#main > div.middle > div.content"));
 
-        List<WebElement> listDucks = getElementsByCss(mainPage, "[class ^= product]");
-        int countAllStikers = getElementsByCss(mainPage, "[class ^= sticker]").size();
+        List<WebElement> listDucks = getElementsByCss(mainPage, ".product");
+        int countAllStikers = getElementsByCss(mainPage, ".sticker").size();
         Assertions.assertEquals(countAllStikers, listDucks.size());
 
         for (WebElement duck : listDucks) {
-            int countSticker = getElementsByCss(duck, "[class ^= sticker]").size();
+            int countSticker = getElementsByCss(duck, ".sticker").size();
             Assertions.assertEquals(countSticker, 1);
         }
     }
