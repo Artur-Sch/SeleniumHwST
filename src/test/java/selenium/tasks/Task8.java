@@ -58,7 +58,7 @@ public class Task8 extends BaseTest {
 
             driver.navigate().to(URL_EDIT_COUNTRIES + code);
             // Получаем список элементов геозон
-            List<WebElement> countriesCodeElm = getElementsBy(By.cssSelector("#table-zones input[name *= 'name'][type='hidden']"));
+            List<WebElement> countriesCodeElm = getElementsBy(By.cssSelector("#table-zones input[name *= 'name'][name ^= 'zones']"));
             for (WebElement element : countriesCodeElm) {
                 countriesList.add(element.getAttribute("value"));
             }
