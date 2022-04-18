@@ -14,6 +14,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.Color;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,7 @@ public class Task10 {
     private static final Logger LOG = LoggerFactory.getLogger(Task10.class);
     private static final String URL = "http://localhost/litecart";
     protected static WebDriver driver;
+    protected static WebDriverWait wait;
 
     void startDriver(String browser) {
         switch (browser) {
@@ -42,14 +44,14 @@ public class Task10 {
                 break;
         }
         driver.manage().window().maximize();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(4));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(5));
     }
 
     @AfterEach
     void closeDriver() {
         LOG.info("Закрываем драйвер");
         driver.close();
-        driver.quit();
     }
 
     /**
@@ -75,12 +77,10 @@ public class Task10 {
 
         firstProduct.click();
 
-        WebElement productBox = driver.findElement(By.cssSelector("#box-product"));
+        WebElement productBox = waitForVisibilityElement(driver.findElement(By.cssSelector("#box-product")));
         String productBoxName = productBox.findElement(By.className("title")).getText();
         WebElement productBoxRegularPrice = productBox.findElement(By.className("regular-price"));
-        String productBoxRegularPriceValue = productBoxRegularPrice.getText();
         WebElement productBoxCampaignPrice = productBox.findElement(By.className("campaign-price"));
-        String productBoxCampaignPricealue = productBoxCampaignPrice.getText();
 
         LOG.info("Проверяем цену на странице товара");
         Assertions.assertTrue(isCrossedOutFont(productBoxRegularPrice) && isGray(productBoxRegularPrice));
@@ -90,9 +90,8 @@ public class Task10 {
         LOG.info("Проверяем название товара на главной странице  и странице товара");
         Assertions.assertEquals(productName, productBoxName);
         LOG.info("Проверяем цену на главной странице  и странице товара");
-        Assertions.assertEquals(productRegularPriceValue, productBoxRegularPriceValue);
-        Assertions.assertEquals(productCampaignPriceValue, productBoxCampaignPricealue);
-
+        Assertions.assertEquals(productRegularPriceValue, productBoxRegularPrice.getText());
+        Assertions.assertEquals(productCampaignPriceValue, productBoxCampaignPrice.getText());
     }
 
     private boolean isGray(WebElement element) {
@@ -117,6 +116,9 @@ public class Task10 {
         double first_px = Double.parseDouble(first.getCssValue("font-size").replace("px", ""));
         double second_px = Double.parseDouble(second.getCssValue("font-size").replace("px", ""));
         return first_px > second_px;
+    }
+    public WebElement waitForVisibilityElement(WebElement element) {
+        return wait.until(ExpectedConditions.visibilityOf(element));
     }
 
 }
