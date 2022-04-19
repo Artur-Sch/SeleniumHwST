@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import selenium.BaseTest;
 
+import java.util.Locale;
 import java.util.Random;
 
 public class Task11 extends BaseTest {
@@ -30,7 +31,7 @@ public class Task11 extends BaseTest {
         getElementBy(By.name("postcode")).sendKeys("14140");
         getElementBy(By.name("city")).sendKeys(RandomString.make(7));
         getElementBy(By.name("phone")).sendKeys("+1" + new Random().nextInt(7));
-        String email = RandomString.make(5) + "@gmail.com";
+        String email = RandomString.make(7).toLowerCase(Locale.ROOT) + "@gmail.com";
         getElementBy(By.name("email")).sendKeys(email);
         String password = RandomString.make(8);
         getElementBy(By.name("password")).sendKeys(password);
@@ -54,5 +55,8 @@ public class Task11 extends BaseTest {
         waitForVisibilityElement(getElementBy(By.name("email"))).sendKeys(email);
         getElementBy(By.name("password")).sendKeys(password);
         getElementBy(By.name("login")).click();
+
+        LOG.info("Нажимаем выход");
+        waitForClickableElement(getElementBy(By.cssSelector("#box-account [href $= logout]"))).click();
     }
 }
