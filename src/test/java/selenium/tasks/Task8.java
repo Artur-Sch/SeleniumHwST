@@ -60,7 +60,7 @@ public class Task8 extends BaseTest {
             // Получаем список элементов геозон
             List<WebElement> countriesCodeElm = getElementsBy(By.cssSelector("#table-zones input[name *= 'name'][name ^= 'zones']"));
             for (WebElement element : countriesCodeElm) {
-                countriesList.add(element.getAttribute("value"));
+                    countriesList.add(element.getText());
             }
             // Проверяем сотрировку стран
             countriesSortedList.addAll(countriesList);

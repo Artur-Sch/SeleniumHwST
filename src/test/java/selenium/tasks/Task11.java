@@ -14,7 +14,7 @@ import java.util.Locale;
 import java.util.Random;
 
 public class Task11 extends BaseTest {
-    private static final Logger LOG = LoggerFactory.getLogger(Task10.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Task11.class);
     private static final String URL = "http://localhost/litecart/en/create_account";
 
     /**
