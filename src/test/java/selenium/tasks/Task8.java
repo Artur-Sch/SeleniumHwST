@@ -58,10 +58,13 @@ public class Task8 extends BaseTest {
 
             driver.navigate().to(URL_EDIT_COUNTRIES + code);
             // Получаем список элементов геозон
-            List<WebElement> countriesCodeElm = getElementsBy(By.cssSelector("#table-zones input[name *= 'name'][name ^= 'zones']"));
+            List<WebElement> countriesCodeElm = getElementsBy(By.cssSelector("#table-zones td:nth-child(3)"));
             for (WebElement element : countriesCodeElm) {
+                if (!element.getText().isEmpty() || !element.getText().equals("")) {
                     countriesList.add(element.getText());
+                }
             }
+
             // Проверяем сотрировку стран
             countriesSortedList.addAll(countriesList);
             Collections.sort(countriesSortedList);
