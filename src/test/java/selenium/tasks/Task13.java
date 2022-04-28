@@ -3,6 +3,7 @@ package selenium.tasks;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
@@ -11,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import selenium.BaseTest;
 
 import java.util.List;
+
+import static org.openqa.selenium.support.ui.ExpectedConditions.stalenessOf;
 
 public class Task13 extends BaseTest {
     private static final Logger LOG = LoggerFactory.getLogger(Task13.class);
@@ -50,9 +53,10 @@ public class Task13 extends BaseTest {
 
         while (quantity > 0) {
             int finalQuantity = quantity;
+            ifShortcutIsPresentCLickFirst();
             getElementBy(By.name("remove_cart_item")).click();
-            wait.until((ExpectedCondition<Boolean>) driver -> getTotalOrderSum() < finalQuantity);
-            quantity= getTotalOrderSum();
+            wait.until(stalenessOf(getElementBy(By.cssSelector("#order_confirmation-wrapper tr:nth-child(2)"))));
+            quantity = getTotalOrderSum();
         }
         LOG.info("Ожидаем появления надписи, что корзина пуста");
         waitForVisibilityElement(getElementBy(By.xpath("//*[contains(text(), 'There are no items in your cart.')]")));
@@ -68,5 +72,12 @@ public class Task13 extends BaseTest {
                 .filter(element -> element.getText().matches("\\d"))
                 .mapToInt(element -> Integer.parseInt(element.getText()))
                 .sum();
+    }
+
+    private void ifShortcutIsPresentCLickFirst() {
+        List<WebElement> list = getElementsBy(By.cssSelector("#box-checkout-cart li:first-child > [href]"));
+        if (list.size() > 0) {
+            list.get(0).click();
+        }
     }
 }
