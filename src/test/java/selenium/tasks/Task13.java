@@ -53,8 +53,9 @@ public class Task13 extends BaseTest {
         while (quantity > 0) {
             int finalQuantity = quantity;
             ifShortcutIsPresentCLickFirst();
+            WebElement tableElement = getElementBy(By.cssSelector("#order_confirmation-wrapper tr:nth-child(2)"));
             getElementBy(By.name("remove_cart_item")).click();
-            wait.until(stalenessOf(getElementBy(By.cssSelector("#order_confirmation-wrapper tr:nth-child(2)"))));
+            wait.until(stalenessOf(tableElement));
             quantity = getTotalOrderSum();
         }
         LOG.info("Ожидаем появления надписи, что корзина пуста");
