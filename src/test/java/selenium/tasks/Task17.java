@@ -35,7 +35,7 @@ public class Task17 extends BaseTest {
         }
     }
 
-    public List<String> getNameElements(List<WebElement> elements) {
+    private List<String> getNameElements(List<WebElement> elements) {
         List<String> names = new ArrayList<>();
         for (WebElement e : elements) {
             names.add(e.getText());
